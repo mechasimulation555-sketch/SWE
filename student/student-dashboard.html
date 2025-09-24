@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="dashboard-app">
-        <!-- Header -->
         <header class="app-header" role="banner">
             <div class="logo-area">
                 <span class="logo-placeholder" aria-label="VITAP Logo">🚌</span>
@@ -42,20 +41,12 @@
                 </div>
                 <div class="sidebar-footer"><span class="sidebar-text">Additional links or info</span></div>
             </aside>
-            <!-- Sidebar removed for single-page layout -->
-            <!-- Main Content -->
             <main class="main-content" id="mainContent" tabindex="-1" aria-label="Dashboard main content">
-                <!-- Home Section -->
                 <section id="section-home" class="content-section active">
                     <div class="dashboard-header">
                         <h2 id="welcomeMessage">Welcome, Student!</h2>
                     </div>
-                    <div class="home-quick-actions">
-                        <!-- Student image from img folder -->
-                        <img src="../img/student-img.jpg" alt="Student photo" class="student-img" />
-                    </div>
                 </section>
-                <!-- Search Section -->
                 <section id="section-search" class="content-section">
                     <div class="search-section card" aria-labelledby="searchTitle">
                         <h3 id="searchTitle">🔍 Search Buses</h3>
@@ -85,7 +76,6 @@
                     <div id="searchResults" class="results-section card" aria-live="polite"></div>
                 </section>
 
-                <!-- Favorites Section (standalone) -->
                 <section id="section-favorites" class="content-section">
                     <div class="favorites-section card" aria-labelledby="favoritesTitleStandalone">
                         <h3 id="favoritesTitleStandalone">📌 Favorite Stops</h3>
@@ -93,8 +83,6 @@
                         <button class="btn btn-primary mt-4" onclick="showAllStops()">+ Add Favorite Stop</button>
                     </div>
                 </section>
-                <!-- All Buses content moved to sidebar -->
-                <!-- Notifications Section -->
                 <section id="section-notifications" class="content-section">
                     <div id="notificationPanelInline" class="card" aria-labelledby="notificationTitle">
                         <h3 id="notificationTitle">🔔 Notifications</h3>
@@ -103,7 +91,6 @@
                 </section>
             </main>
         </div>
-        <!-- Notification Panel -->
         <div id="notificationPanel" class="modal" aria-modal="true" role="dialog">
             <div class="modal-content">
                 <h4>🔔 Recent Notifications</h4>
