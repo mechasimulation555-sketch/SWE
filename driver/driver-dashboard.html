@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - VITAP Bus Tracking</title>
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <link rel="stylesheet" href="./driver-styles.css">
+</head>
+<body>
+    <div class="dashboard-app">
+        <!-- Header -->
+        <header class="app-header" role="banner">
+            <div class="logo-area">
+                <span class="logo-placeholder" aria-label="VITAP Logo">🚌</span>
+                <span class="app-title">VITAP Bus Tracking</span>
+            </div>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Help</a>
+            </nav>
+            <div class="profile-menu" tabindex="0" aria-haspopup="true" aria-label="User menu">
+                <span class="profile-avatar">🧑‍✈️</span>
+                <span class="profile-name" id="profileName">Driver</span>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <button onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+        <div class="dashboard-grid">
+            <!-- Sidebar removed for single-page layout -->
+            <!-- Main Content -->
+            <main class="main-content" id="mainContent" tabindex="-1" aria-label="Driver dashboard main content">
+                <section id="section-mybus" class="content-section">
+                    <section class="dashboard-header">
+                        <h2 id="welcomeMessage">Welcome, Driver!</h2>
+                    </section>
+                    <section class="driver-section card" aria-labelledby="driverActionsTitle">
+                        <h3 id="driverActionsTitle">🚌 My Bus Actions</h3>
+                        <div class="driver-actions">
+                            <button class="driver-btn" id="startTripBtn"><span class="driver-icon">▶️</span> Start Trip</button>
+                            <button class="driver-btn" id="updateDelayBtn"><span class="driver-icon">⏱️</span> Update Delay</button>
+                            <button class="driver-btn danger" id="emergencyBtn"><span class="driver-icon">🚨</span> Emergency Alert</button>
+                        </div>
+                        <div class="driver-status" id="driverStatus"></div>
+                    </section>
+                </section>
+                <section id="section-delay" class="content-section">
+                    <div class="card">
+                        <h3>⏱️ Delay</h3>
+                        <p>Update or view delay information.</p>
+                    </div>
+                </section>
+                <section id="section-emergency" class="content-section">
+                    <div class="card">
+                        <h3>🚨 Emergency</h3>
+                        <p>Report or view emergency protocols.</p>
+                    </div>
+                </section>
+                <section id="section-settings" class="content-section">
+                    <div class="card">
+                        <h3>⚙️ Settings</h3>
+                        <p>Driver account settings.</p>
+                    </div>
+                </section>
+                <section id="section-help" class="content-section">
+                    <div class="card">
+                        <h3>❓ Help</h3>
+                        <p>Driver help and documentation.</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <footer class="main-footer" role="contentinfo">
+            <div class="footer-content">
+                <span>Support: <a href="mailto:support@vitap.ac.in">support@vitap.ac.in</a> | +91-12345-67890</span>
+            </div>
+        </footer>
+    </div>
+    <script src="../js/common-utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="driver-dashboard.js"></script>
+</body>
+</html>

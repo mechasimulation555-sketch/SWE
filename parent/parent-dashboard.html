@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - VITAP Bus Tracking</title>
+    <meta name="description" content="VITAP University Bus Tracking - Parent Dashboard">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:title" content="VITAP Bus Tracking - Parent Dashboard">
+    <meta property="og:description" content="Track your child's bus in real time with VITAP University's Parent Dashboard.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="VITAP Bus Tracking">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <link rel="stylesheet" href="./parent-styles.css">
+</head>
+<body>
+    <div class="dashboard-app">
+        <!-- Header -->
+        <header class="app-header" role="banner">
+            <div class="logo-area">
+                <span class="logo-placeholder" aria-label="VITAP Logo">🚌</span>
+                <span class="app-title">VITAP Bus Tracking</span>
+            </div>
+            <div class="child-selector-area">
+                <label for="childSelector" class="sr-only">Select Child</label>
+                <select id="childSelector" aria-label="Select Child" aria-describedby="childSelectorDesc"></select>
+                <span id="childSelectorDesc" class="sr-only">Selecting a child will update the dashboard with their bus tracking information.</span>
+            </div>
+            <button class="btn btn-danger emergency-btn" id="emergencyBtn" aria-label="Emergency Contact">🚨 Emergency</button>
+            <div class="profile-menu" tabindex="0" aria-haspopup="true" aria-label="User menu">
+                <span class="profile-avatar">👤</span>
+                <span class="profile-name" id="profileName">Parent</span>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <button onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+        <!-- Global emergency alerts (not inside any section) -->
+        <div id="emergencyAlerts" class="emergency-alerts card" aria-live="assertive" style="display:none; margin: 12px 24px 0 24px;">
+            <h3>🚨 Emergency Alerts</h3>
+            <div id="alertsList"></div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Sidebar removed for single-page layout -->
+            <!-- Main Content -->
+            <main class="main-content" id="mainContent" tabindex="-1" aria-label="Parent dashboard main content" role="main">
+                <div class="dashboard-header">
+                    <h2 id="welcomeMessage">Welcome, Parent!</h2>
+                </div>
+                <!-- My Children (default) -->
+                <section id="section-children" class="content-section">
+                    <section class="children-section card" aria-labelledby="childrenTitle">
+                        <h3 id="childrenTitle">👨‍👩‍👧‍👦 My Children</h3>
+                        <div id="childrenList" class="children-list"></div>
+                        <button class="btn btn-primary mt-4" onclick="addChild()">+ Add Child</button>
+                    </section>
+
+                    <section class="safety-overview card" aria-labelledby="safetyTitle" style="margin-top:16px;">
+                        <h3 id="safetyTitle">🛡️ Safety Overview</h3>
+                        <div id="safetySummary"></div>
+                    </section>
+
+                    <!-- Notifications (Alerts Panel) -->
+                <section id="section-notifications" class="content-section">
+                    <section class="card">
+                        <h3 id="alertsPanelTitle">🔔 Alerts & Notifications</h3>
+                        <div id="notificationHistory"></div>
+                    </section>
+                </section>
+                </section>
+
+                <!-- Tracking -->
+                <section id="section-tracking" class="content-section">
+                    <section class="card">
+                        <h3>📍 Live Tracking</h3>
+                        <label for="trackChildSelect" class="sr-only">Select child to track</label>
+                        <select id="trackChildSelect" aria-label="Select child to track" style="margin:10px 0; padding:8px; border-radius:8px; border:1px solid var(--color-border);"></select>
+                        <div id="trackingMap" style="height:320px; background:linear-gradient(180deg, #eef2f3, #fff); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--color-muted);">Map placeholder — integrate map API here</div>
+                        <div id="trackingInfo" style="margin-top:12px;"></div>
+                    </section>
+                </section>
+
+                <!-- History -->
+                <section id="section-history" class="content-section">
+                    <section class="card">
+                        <h3>📜 Trip History</h3>
+                        <table class="table" id="historyTable" style="width:100%; margin-top:12px; border-collapse: collapse;">
+                            <thead>
+                                <tr style="text-align:left; border-bottom:1px solid var(--color-border);">
+                                    <th>Date</th>
+                                    <th>Departure</th>
+                                    <th>Arrival</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </section>
+                </section>
+
+                <!-- Settings -->
+                <section id="section-settings" class="content-section">
+                    <section class="card">
+                        <h3>⚙️ Settings</h3>
+                        <form id="parentSettingsForm" style="margin-top:12px; display:flex; flex-direction:column; gap:10px; max-width:480px;">
+                            <label><input type="checkbox" id="notifyArrival" /> Notify on arrival</label>
+                            <label><input type="checkbox" id="notifyDelay" /> Notify on delay</label>
+                            <label>Display name: <input type="text" id="parentDisplayName" style="margin-left:8px; padding:6px; border-radius:6px; border:1px solid var(--color-border);"/></label>
+                            <div>
+                                <button class="btn btn-primary" type="button" id="saveSettingsBtn">Save Settings</button>
+                            </div>
+                        </form>
+                    </section>
+                </section>
+
+                <!-- Help -->
+                <section id="section-help" class="content-section">
+                    <section class="card">
+                        <h3>❓ Help & Support</h3>
+                        <div style="margin-top:12px;">
+                            <p><strong>Support:</strong> <a href="mailto:support@vitap.ac.in">support@vitap.ac.in</a> | +91-12345-67890</p>
+                            <h4>FAQ</h4>
+                            <ul>
+                                <li>How do I track my child? — Use the Tracking tab and select your child.</li>
+                                <li>How do I receive alerts? — Enable notifications in Settings.</li>
+                            </ul>
+                            <h4>User Guide</h4>
+                            <p>All dashboard sections are now visible below. Click 'Track Now' on a child card to view live tracking.</p>
+                        </div>
+                    </section>
+                </section>
+
+                
+            </main>
+        </div>
+        <!-- Emergency Modal -->
+        <div id="emergencyModal" class="modal" aria-modal="true" role="dialog">
+            <div class="modal-content">
+                <h4>🚨 Emergency Contact</h4>
+                <div id="emergencyContacts"></div>
+                <button class="btn btn-secondary" onclick="closeEmergencyModal()">Close</button>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="main-footer" role="contentinfo">
+            <div class="footer-content">
+                <span>Support: <a href="mailto:support@vitap.ac.in">support@vitap.ac.in</a> | +91-12345-67890</span>
+                <span class="footer-copy">&copy; 2025 VIT-AP University. All rights reserved.</span>
+            </div>
+        </footer>
+    </div>
+    <script src="../js/common-data.js"></script>
+    <script src="../js/common-utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="parent-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - VITAP Bus Tracking</title>
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <link rel="stylesheet" href="./admin-styles.css">
+</head>
+<body>
+    <div class="dashboard-app">
+        <!-- Header -->
+        <header class="app-header" role="banner">
+            <div class="logo-area">
+                <span class="logo-placeholder" aria-label="VITAP Logo">🚌</span>
+                <span class="app-title">VITAP Bus Tracking</span>
+            </div>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Help</a>
+            </nav>
+            <div class="profile-menu" tabindex="0" aria-haspopup="true" aria-label="User menu">
+                <span class="profile-avatar">🛠️</span>
+                <span class="profile-name" id="profileName">Admin</span>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <button onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+        <div class="dashboard-grid">
+            <!-- Sidebar removed for single-page layout -->
+            <!-- Main Content -->
+            <main class="main-content" id="mainContent" tabindex="-1" aria-label="Admin dashboard main content">
+                <section id="section-buses" class="content-section">
+                    <div id="buses" class="section active card">
+                        <h2><span class="section-icon">🚌</span> Bus Management</h2>
+                        <p>Add, edit, or remove buses here.</p>
+                    </div>
+                </section>
+                <section id="section-routes" class="content-section">
+                    <div id="routes" class="section card">
+                        <h2><span class="section-icon">🗺️</span> Route Management</h2>
+                        <p>Create and modify bus routes here.</p>
+                    </div>
+                </section>
+                <section id="section-drivers" class="content-section">
+                    <div id="drivers" class="section card">
+                        <h2><span class="section-icon">🧑‍✈️</span> Driver Management</h2>
+                        <p>Assign drivers to buses here.</p>
+                    </div>
+                </section>
+                <section id="section-users" class="content-section">
+                    <div id="users" class="section card">
+                        <h2><span class="section-icon">👥</span> User Management</h2>
+                        <p>Approve students and parents here.</p>
+                    </div>
+                </section>
+                <section id="section-reports" class="content-section">
+                    <div id="reports" class="section card">
+                        <h2><span class="section-icon">📊</span> Reports</h2>
+                        <p>Generate daily, weekly, monthly reports of bus operations here.</p>
+                    </div>
+                </section>
+                <section id="section-notifications" class="content-section">
+                    <div id="notifications" class="section card">
+                        <h2><span class="section-icon">🔔</span> Notifications</h2>
+                        <p>Send and manage notifications here.</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <footer class="main-footer" role="contentinfo">
+            <div class="footer-content">
+                <span>Support: <a href="mailto:support@vitap.ac.in">support@vitap.ac.in</a> | +91-12345-67890</span>
+            </div>
+        </footer>
+    </div>
+    <script src="../js/common-utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="admin-dashboard.js"></script>
+</body>
+</html>
