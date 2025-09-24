@@ -26,20 +26,10 @@
         </header>
         <div class="dashboard-grid">
             <aside id="sidebar" class="sidebar" role="navigation" aria-label="Bus Tracking Sections">
-                <button id="sidebarToggle" class="sidebar-toggle" aria-expanded="true" aria-label="Toggle sidebar">☰</button>
-                <div class="sidebar-header">Sections</div>
                 <nav class="sidebar-nav">
-                    <a href="#" class="sidebar-link active" data-section="section-home"><span class="sidebar-icon">🏠</span><span class="sidebar-text">Home</span></a>
-                    <a href="#" class="sidebar-link" data-section="section-search"><span class="sidebar-icon">🔍</span><span class="sidebar-text">Search</span></a>
-                    <a href="#" class="sidebar-link" data-section="section-favorites"><span class="sidebar-icon">📌</span><span class="sidebar-text">Favorites</span></a>
-                    <a href="#" class="sidebar-link" data-section="section-notifications"><span class="sidebar-icon">🔔</span><span class="sidebar-text">Notifications</span></a>
+                    <a href="#" class="sidebar-link active"><span class="sidebar-icon">🏠</span><span class="sidebar-text">Home</span></a>
+                    <a href="all-buses.html" class="sidebar-link"><span class="sidebar-icon">🚌</span><span class="sidebar-text">All Buses</span></a>
                 </nav>
-                <div class="sidebar-divider"></div>
-                <div class="sidebar-buses" aria-label="All Buses list">
-                    <div class="sidebar-subtitle"><span class="sidebar-icon">🚌</span><span class="sidebar-text">All Buses</span></div>
-                    <div id="busListSidebar" class="bus-list" aria-live="polite"></div>
-                </div>
-                <div class="sidebar-footer"><span class="sidebar-text">Additional links or info</span></div>
             </aside>
             <main class="main-content" id="mainContent" tabindex="-1" aria-label="Dashboard main content">
                 <section id="section-home" class="content-section active">
@@ -91,17 +81,9 @@
                 </section>
             </main>
         </div>
-        <div id="notificationPanel" class="modal" aria-modal="true" role="dialog">
-            <div class="modal-content">
-                <h4>🔔 Recent Notifications</h4>
-                <div id="notificationList"></div>
-                <button class="btn btn-secondary" onclick="toggleNotifications()">Close</button>
-            </div>
-        </div>
     </div>
     <script src="../js/common-data.js"></script>
     <script src="../js/common-utils.js"></script>
     <script src="student-dashboard.js"></script>
-    
 </body>
 </html>
