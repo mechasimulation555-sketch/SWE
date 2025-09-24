@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
 
-
 /* Updated palette to match home page (beige/gold/brown) */
 :root {
   /* Color Palette */
@@ -62,20 +61,15 @@
   flex-direction: column;
 }
 .dashboard-grid {
-  display: grid;
-  grid-template-columns: 260px 1fr; /* sidebar + content */
-  gap: var(--space-6);
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
+  width: auto;
   flex: 1 1 auto;
   padding: var(--space-6);
-  box-sizing: border-box;
+  margin-left: 260px; /* Pushes main content to the right of the sidebar */
 }
 @media (max-width: 900px) {
   .dashboard-grid {
-    grid-template-columns: 1fr;
     padding: var(--space-3);
+    margin-left: 0; /* Remove margin on mobile where sidebar is hidden */
   }
   .sidebar {
     display: none;
@@ -186,20 +180,17 @@
   SIDEBAR
 ************/
 .sidebar {
+  position: fixed; /* Ensures it stays fixed on the left */
+  left: 0;
+  top: 76px; /* Position below the header (adjust if header height changes) */
+  height: calc(100% - 76px); /* Full height minus header */
+  width: 260px;
   background: #fff;
   border-right: 2px solid var(--color-border);
   padding: var(--space-6) var(--space-2) var(--space-6) var(--space-4);
-  min-height: 80vh;
-  border-radius: 0;
   box-shadow: 0 4px 24px rgba(59,130,246,0.10);
-  width: 240px;
-  margin-left: 0;
-  position: sticky;
-  top: 76px; /* header height + spacing */
-  align-self: start;
-  max-height: calc(100vh - 90px);
-  overflow: hidden;
-  display: block;
+  z-index: 5;
+  overflow-y: auto; /* Allows sidebar to scroll if its content is long */
 }
 .sidebar .sidebar-text { display: inline; }
 .sidebar .sidebar-icon { margin-right: 8px; }
