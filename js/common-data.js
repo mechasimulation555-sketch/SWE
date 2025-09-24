@@ -79,6 +79,7 @@ const busRoutesData = [
 const busData = generateBusData(busRoutesData);
 // Expose for other dashboards
 window.busData = busData;
+window.busRoutesData = busRoutesData;
 
 const stops = {
     'Main Gate': ['VIT-101', 'VIT-202', 'VIT-303'],
@@ -193,13 +194,13 @@ window.notificationData = notifications;
 // Utility functions
 const utils = {
     formatTime: (date) => {
-        return date.toLocaleTimeString('en-IN', { 
-            hour: '2-digit', 
+        return date.toLocaleTimeString('en-IN', {
+            hour: '2-digit',
             minute: '2-digit',
-            hour12: true 
+            hour12: true
         });
     },
-    
+
     formatDate: (date) => {
         return date.toLocaleDateString('en-IN', {
             year: 'numeric',
@@ -207,7 +208,7 @@ const utils = {
             day: 'numeric'
         });
     },
-    
+
     getStatusClass: (status) => {
         switch(status.toLowerCase()) {
             case 'ontime': return 'status-ontime';
@@ -216,7 +217,7 @@ const utils = {
             default: return 'status-ontime';
         }
     },
-    
+
     getStatusText: (status, delay = 0) => {
         switch(status.toLowerCase()) {
             case 'ontime': return 'On Time';
@@ -225,34 +226,34 @@ const utils = {
             default: return 'Unknown';
         }
     },
-    
+
     searchBuses: (query, type = 'number') => {
         query = query.toLowerCase().trim();
         if (!query) return busData;
-        
+
         if (type === 'number') {
-            return busData.filter(bus => 
+            return busData.filter(bus =>
                 bus.number.toLowerCase().includes(query)
             );
         } else {
             // Search by stop name
-            const busesAtStop = stops[Object.keys(stops).find(stop => 
+            const busesAtStop = stops[Object.keys(stops).find(stop =>
                 stop.toLowerCase().includes(query)
             )] || [];
-            return busData.filter(bus => 
+            return busData.filter(bus =>
                 busesAtStop.includes(bus.number)
             );
         }
     },
-    
+
     getBusByNumber: (busNumber) => {
         return busData.find(bus => bus.number === busNumber);
     },
-    
+
     getDriverByBus: (busNumber) => {
         return drivers.find(driver => driver.assignedBus === busNumber);
     },
-    
+
     addBus: (newBus) => {
         if (!newBus || !newBus.number) {
             console.error("Invalid bus data provided.");
@@ -279,7 +280,7 @@ const utils = {
         const notification = document.createElement('div');
         notification.className = `notification-toast ${type}`;
         notification.textContent = message;
-        
+
         Object.assign(notification.style, {
             position: 'fixed',
             top: '20px',
@@ -293,14 +294,14 @@ const utils = {
             transform: 'translateX(100%)',
             transition: 'transform 0.3s ease'
         });
-        
+
         document.body.appendChild(notification);
-        
+
         // Animate in
         setTimeout(() => {
             notification.style.transform = 'translateX(0)';
         }, 100);
-        
+
         // Remove after 3 seconds
         setTimeout(() => {
             notification.style.transform = 'translateX(100%)';
@@ -309,7 +310,7 @@ const utils = {
             }, 300);
         }, 3000);
     },
-    
+
     validateForm: (formData) => {
         const errors = [];
         for (const [key, value] of Object.entries(formData)) {
