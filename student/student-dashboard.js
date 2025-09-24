@@ -49,21 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
   populateRouteFilter();
   loadNotifications();
 
-  // Sidebar navigation
-  const sidebar = document.querySelector('.sidebar');
-  if (sidebar) sidebar.addEventListener('click', handleSidebarNav);
-  const toggleBtn = document.getElementById('sidebarToggle');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const sb = document.getElementById('sidebar');
-      if (!sb) return;
-      const isCollapsed = sb.classList.toggle('collapsed');
-      toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
-    });
-  }
-  initSections();
-
   // Search
   document.getElementById('busNumberInput').addEventListener('input', debounce(handleSearchInput, 300));
   document.getElementById('searchBtn').addEventListener('click', () => searchBuses('auto'));
@@ -73,118 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('sortBy').addEventListener('change', () => searchBuses('auto'));
   // Auto-refresh every 30 seconds
   setInterval(refreshBusData, 30000);
-  // Keyboard shortcuts
 });
-
-// --- Section Navigation ---
-const SECTION_IDS = {
-  Home: 'section-home',
-  Search: 'section-search',
-  Favorites: 'section-favorites',
-  'All Buses': 'section-allbuses',
-  Notifications: 'section-notifications'
-};
-
-function initSections() {
-  document.querySelectorAll('.content-section').forEach(sec => {
-    sec.style.display = 'none';
-    sec.classList.remove('active');
-    sec.style.opacity = 0;
-    sec.style.transform = 'translateY(6px)';
-    sec.setAttribute('aria-hidden', 'true');
-  });
-  // Default to Home
-  showSection('Home');
-  // Activate Home link
-  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-  const homeLink = Array.from(document.querySelectorAll('.sidebar-link')).find(l => {
-    const label = l.textContent.trim();
-    return label === 'Home';
-  });
-  if (homeLink) homeLink.classList.add('active');
-}
-
-function handleSidebarNav(e) {
-  const link = e.target.closest('.sidebar-link');
-  if (!link) return;
-  e.preventDefault();
-  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-  link.classList.add('active');
-  const label = link.textContent.trim();
-  showSection(label);
-}
-
-function showSection(label) {
-  const targetId = SECTION_IDS[label];
-  if (!targetId) return;
-  document.querySelectorAll('.content-section').forEach(sec => {
-    if (sec.id === targetId) return;
-    sec.style.opacity = 0;
-    sec.style.transform = 'translateY(6px)';
-    setTimeout(() => sec.style.display = 'none', 220);
-    sec.classList.remove('active');
-    sec.setAttribute('aria-hidden', 'true');
-  });
-  const target = document.getElementById(targetId);
-  if (!target) return;
-  target.style.display = '';
-  requestAnimationFrame(() => {
-    target.style.opacity = 1;
-    target.style.transform = 'translateY(0)';
-    target.classList.add('active');
-  });
-  target.setAttribute('aria-hidden', 'false');
-  // Load sidebar buses list on Home so it's visible immediately
-  loadSidebarBuses();
-}
-
-function loadSidebarBuses() {
-  const listEl = document.getElementById('busListSidebar');
-  if (!listEl) return;
-  const data = window.busData || [];
-  if (!data.length) {
-    listEl.innerHTML = '<div class="text-muted">No buses available.</div>';
-    return;
-  }
-  listEl.innerHTML = data.map(b => {
-    const eta = b.eta || `${b.etaMinutes || 0} minutes`;
-    return `
-      <div class="bus-item" tabindex="0" aria-label="Bus ${b.number}, ETA ${eta}" title="ETA: ${eta}">
-        <div>
-          <div class="bus-id">${b.number}</div>
-          <div class="eta">ETA: ${eta}</div>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-sm btn-outline" onclick="trackBus('${b.number}')">Track</button>
-          <button class="btn btn-sm btn-secondary" onclick="setNotification('${b.number}')">Alert</button>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-// Helper to render favorites HTML (to avoid duplication)
-function renderFavoriteStopsHTML(stops) {
-  if (!stops || !stops.length) return '<div class="no-results"><img src="../img/empty-fav.svg" alt="No favorites" style="width:80px;opacity:.7;"><br>No favorite stops added yet.</div>';
-  return stops.map(stop => `
-    <div class="favorite-stop" tabindex="0" onclick="searchByStop('${stop}')">
-      <span>📍 ${stop}</span>
-      <button class="btn btn-sm btn-danger" onclick="removeFavoriteStop('${stop}', event)">✕</button>
-    </div>
-  `).join('');
-}
-
-function handleShortcuts(e) {
-  if (e.ctrlKey && e.key === 'f') {
-    e.preventDefault();
-    document.getElementById('busNumberInput').focus();
-  }
-  if (e.ctrlKey && e.key === 'n') {
-    e.preventDefault();
-    showAllStops();
-  }
-}
-
-// Sidebar navigation removed for single-page layout
 
 // --- Search & Autocomplete ---
 function handleSearchInput(e) {
@@ -229,7 +103,6 @@ function searchBuses(searchType) {
   const route = document.getElementById('routeFilter').value;
   const status = document.getElementById('statusFilter').value;
   const sortBy = document.getElementById('sortBy').value;
-  // Try server-side search
   const params = new URLSearchParams();
   if (query) params.set('query', query);
   if (route) params.set('route', route);
@@ -244,7 +117,6 @@ function searchBuses(searchType) {
     .catch((err) => {
       console.error('Failed to search buses:', err);
       showToast('Could not fetch bus data from server.', 'error');
-      // On error, clear the results to avoid showing stale data.
       const resultsContainer = document.getElementById('searchResults');
       resultsContainer.innerHTML = `<div class="no-results">Error loading search results. Please try again.</div>`;
     });
@@ -259,13 +131,11 @@ function displaySearchResults(buses) {
   resultsContainer.innerHTML = buses.map(bus => createBusCard(bus)).join('');
 }
 
-// Normalize bus object returned by API (snake_case) to frontend-friendly camelCase
 function normalizeBus(raw) {
   if (!raw) {
     console.warn('normalizeBus received null/undefined data');
     return null;
   }
-
   try {
     const etaMin = Number.isFinite(raw.eta_minutes) ? raw.eta_minutes : 0;
     const delayMin = Number.isFinite(raw.delay_minutes) ? raw.delay_minutes : 0;
@@ -287,7 +157,7 @@ function normalizeBus(raw) {
     };
   } catch (error) {
     console.error('Error normalizing bus data:', raw, error);
-    return null; // Return null for the invalid bus so it can be filtered out
+    return null;
   }
 }
 
@@ -322,27 +192,11 @@ function createBusCard(bus) {
   `;
 }
 
-async function loadAllBuses() {
-  const busList = document.getElementById('busList');
-  if (!busList) return; // Exit if the container doesn't exist
-
-  // Use the global busData from common-data.js
-  const localBusData = window.busData || [];
-  busData = localBusData;
-   showSkeleton(busList, 5); // Show skeleton loading
-  try {
-        busList.innerHTML = busData.map(bus => createBusCard(bus)).join('');
-    } catch (error) {
-        console.error("Error loading all buses:", error);
-    }
-}
-
 async function populateRouteFilter() {
   const routeFilter = document.getElementById('routeFilter');
   if (!routeFilter) return;
 
   try {
-    // We can use the existing /api/buses endpoint to get all unique routes
     const res = await fetch(`${API_BASE}/buses`);
     if (res.ok) {
       const allBuses = await res.json();
@@ -354,15 +208,20 @@ async function populateRouteFilter() {
   }
 }
 
-function loadFavoriteStops() {
-  const favoriteContainerHome = document.getElementById('favoriteStops');
-  const favoriteContainerStandalone = document.getElementById('favoriteStopsStandalone');
-  
-  // Load favorites directly from localStorage
-  favoriteStops = JSON.parse(localStorage.getItem('favoriteStops') || '[]');
+function renderFavoriteStopsHTML(stops) {
+  if (!stops || !stops.length) return '<div class="no-results"><img src="../img/empty-fav.svg" alt="No favorites" style="width:80px;opacity:.7;"><br>No favorite stops added yet.</div>';
+  return stops.map(stop => `
+    <div class="favorite-stop" tabindex="0" onclick="searchByStop('${stop}')">
+      <span>📍 ${stop}</span>
+      <button class="btn btn-sm btn-danger" onclick="removeFavoriteStop('${stop}', event)">✕</button>
+    </div>
+  `).join('');
+}
 
+function loadFavoriteStops() {
+  const favoriteContainerStandalone = document.getElementById('favoriteStopsStandalone');
+  favoriteStops = JSON.parse(localStorage.getItem('favoriteStops') || '[]');
   const content = renderFavoriteStopsHTML(favoriteStops);
-  if (favoriteContainerHome) favoriteContainerHome.innerHTML = content;
   if (favoriteContainerStandalone) favoriteContainerStandalone.innerHTML = content;
 }
 
@@ -372,7 +231,6 @@ function toggleFavoriteStop(stopName) {
   else favoriteStops.push(stopName);
   localStorage.setItem('favoriteStops', JSON.stringify(favoriteStops));
   loadFavoriteStops();
-  loadAllBuses();
 }
 
 function removeFavoriteStop(stopName, event) {
@@ -380,7 +238,6 @@ function removeFavoriteStop(stopName, event) {
   favoriteStops = favoriteStops.filter(stop => stop !== stopName);
   localStorage.setItem('favoriteStops', JSON.stringify(favoriteStops));
   loadFavoriteStops();
-  loadAllBuses();
 }
 
 function searchByStop(stopName) {
@@ -422,20 +279,7 @@ function loadNotifications() {
   `).join('');
 }
 
-function toggleNotifications() {
-  const panel = document.getElementById('notificationPanel');
-  panel.classList.toggle('show');
-  if (panel.classList.contains('show')) {
-    panel.setAttribute('aria-hidden', 'false');
-    panel.querySelector('.btn').focus();
-  } else {
-    panel.setAttribute('aria-hidden', 'true');
-  }
-}
-
 function refreshBusData() {
-  // To refresh data, we should re-run the current search to get the latest info from the server.
-  // This preserves the user's filters.
   console.log('Refreshing bus data...');
   searchBuses('auto');
 }
@@ -480,23 +324,4 @@ function showAllStops() {
 function logout() {
   sessionStorage.removeItem('currentUser');
   window.location.href = '../index.html';
-}
-
-// Add this temporary test function to your student-dashboard.js
-// Call it from browser console to test the API
-async function testAPIEndpoint() {
-  try {
-    console.log('Testing API endpoint...');
-    const response = await fetch('/api/buses');
-    if (!response.ok) {
-      console.error('API test failed! Status:', response.status, response.statusText);
-      const text = await response.text();
-      console.error('Response body:', text);
-      return;
-    }
-    const data = await response.json();
-    console.log('API test successful! Data:', data);
-  } catch (error) {
-    console.error('Error during API test:', error);
-  }
 }
